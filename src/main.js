@@ -37,10 +37,6 @@ if (snapshot.exists()) {
     console.error(error);
 });*/
 
-function H() {
-  //overlay.style.display = "block";
-  //naiyou.value = "";
-}
 function AddData() {
   const newPostRef = push(postsRef, {
     post: naiyou.value,
