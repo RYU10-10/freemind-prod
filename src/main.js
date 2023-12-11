@@ -1,11 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {
-  getDatabase,
-  ref,
-  push,
-  onValue,
-  onChildAdded,
-} from "firebase/database";
+import { getDatabase, ref, push, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -17,25 +11,15 @@ const firebaseConfig = {
   messagingSenderId: "51654346876",
   appId: "1:51654346876:web:23017fc57b01172f2361f9",
 };
-// Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
 const send = document.getElementById("send");
 const naiyou = document.getElementById("naiyou");
+const list = document.getElementById("list");
 const postsRef = ref(db, "users/post");
-
-//const dbRef = ref(getDatabase());
-/*get(child(postsRef)).then((snapshot) => {
-if (snapshot.exists()) {
-    console.log(snapshot.val());
-} else {
-    console.log("No data available");
-}
-}).catch((error) => {
-    console.error(error);
-});*/
 
 function AddData() {
   const newPostRef = push(postsRef, {
@@ -44,38 +28,38 @@ function AddData() {
     .then(() => {
       updateView();
       alert("Data Added Successfully");
-      //console.log(naiyou.value)
-      //let div = document.createElement("div");
-      // 親要素に追加
-      //list.appendChild(div);
     })
     .catch((error) => {
       alert("Unsuccessful");
       console.log(error);
     });
 }
-onChildAdded(postsRef, function (snapshot) {
-  let data = snapshot.val();
-  console.log(data);
-});
+window.showPost = function (elem) {
+  const post = elem.innerHTML;
+
+  document.getElementById("post-viewer").innerHTML = `
+    <h1>${post}</h1>
+  `;
+};
 function updateView() {
+  var postsHTML = "";
   onValue(
     postsRef,
     (snapshot) => {
-      console.log(naiyou.value);
       if (snapshot.exists()) {
         console.log(snapshot.val());
-      } else {
-        console.log("No data available");
+        snapshot.forEach((child) => {
+          postsHTML += `
+          <div onclick="showPost(this)">
+            <h3>${child.val().post}</h3>
+            </div>
+          `;
+        });
+        document.getElementById("posts").innerHTML = postsHTML;
       }
-      //const data = snapshot.val();
-      //updateStarCount(postElement, data);
-      //}),(error) => {
-      //console.log(error);
     },
     (error) => console.log(error)
   );
 }
 updateView();
 send.addEventListener("click", AddData);
-send.addEventListener("click", H);
