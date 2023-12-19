@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, push, onValue } from "firebase/database";
-import { getAuth } from "firebase/auth";
+import { getAuth,onAuthStateChanged } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA3R_xD_ZKuausjMYIWsGuka3w9XlAxA-Y",
@@ -19,23 +19,39 @@ const auth = getAuth(app);
 const send = document.getElementById("send");
 const naiyou = document.getElementById("naiyou");
 const list = document.getElementById("list");
-const postsRef = ref(db, "users/post");
+const posts = document.getElementById("posts")
+const check=document.getElementById("check")
+//const postsRef = ref(db, "users/post");
+const userName = document.getElementById("userName");
 const now = new Date().toISOString();
-//const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
+
+onAuthStateChanged(auth, (user) => {
+  if(user) {
+   userName.innerHTML = user.displayName;
+   updateView();
+   }
+})
 
 function AddData() {
-  const newPostRef = push(postsRef, {
-    post: naiyou.value,
-    time: now,
-  })
+  const user = auth.currentUser;
+        if (user) {
+          const uid = user.uid;
+          const postsRef = ref(db, "users/" + uid + "/post");
+          const newPostRef = push(postsRef, {
+            uid: uid,
+            post: naiyou.value,
+            time: now,
+          })
     .then(() => {
       updateView();
       alert("Data Added Successfully");
+      //location.href="table.html";
     })
     .catch((error) => {
       alert("Unsuccessful");
       console.log(error);
     });
+  }
 }
 window.showPost = function (elem) {
   const key = elem.dataset.key; // 投稿のキーをデータ属性に
@@ -50,14 +66,20 @@ window.showPost = function (elem) {
   `;
 };
 
-function updateView() {
+function updateView(){
   var postsHTML = "";
+  const user = auth.currentUser;
+        if (user) {
+          const uid = user.uid;
+          const postsRef = ref(db, "users/" + uid + "/post");
   onValue(
     postsRef,
     (snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val());
         snapshot.forEach((child) => {
+          const uid = child.val().uid;
+          const postsRef = ref(db, "users/" + uid + "/post");
           const postData = child.val();
           const formattedDate = formatTimestamp(postData.time);
           console.log("タイムスタンプ:", postData.time);
@@ -73,7 +95,9 @@ function updateView() {
       }
     },
     (error) => console.log(error)
-  );
+  )}else{
+    console.log("userがないよ");
+  }
 }
 
 function formatTimestamp(timestamp) {
@@ -87,5 +111,6 @@ function formatTimestamp(timestamp) {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 }
 
-updateView();
+//updateView();
 send.addEventListener("click", AddData);
+check.addEventListener("click",updateView);
