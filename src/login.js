@@ -19,7 +19,7 @@ const loginButton = document.getElementById("login");
 function loginF() {
   signInWithPopup(auth, provider)
     .then((result) => {
-      location.href = "post.html";
+      location.href = "SNS.html";
     })
     .catch((error) => {
       const errorCode = error.code;

@@ -1,0 +1,54 @@
+.q_button{
+  margin-top: 100px;
+  margin-left: 110px;
+  width: 240px;
+  height: 500px;
+  display: inline-block;
+  justify-content: space-evenly;
+  border-radius: 5px;
+}
+.q_button:hover{
+  background-color: greenyellow;
+}
+
+.bb_button{
+  margin-left: 50px;
+  width: 240px;
+  height: 500px;
+  display: inline-block;
+  justify-content: space-evenly;
+  border-radius: 5px;
+}
+.bb_button:hover{
+  background-color: greenyellow;
+}
+
+.pt_button{
+  margin-left: 50px;
+  width: 240px;
+  height: 500px;
+  display: inline-block;
+  justify-content: space-evenly;
+  border-radius: 5px;
+}
+.pt_button:hover{
+  background-color: greenyellow;
+}
+
+.sb_button{
+  margin-left: 50px;
+  width: 240px;
+  height: 500px;
+  display: inline-block;
+  justify-content: space-evenly;
+  border-radius: 5px;
+}
+.sb_button:hover{
+  background-color: greenyellow;
+}
+div{
+  text-align: center;
+  width:120px;
+  height:60px;
+  border-radius: 5px;
+}

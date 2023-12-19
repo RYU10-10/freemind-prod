@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/situmon.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>質問箱ページ</title>
+  </head>
+  <body>
+    <input type="checkbox" id="popup" />
+    <div id="overlay">
+      <label for="popup" id="bg_gray"></label>
+      <div id="window">
+        <label for="popup" id="btn_cloth">
+          <span></span>
+        </label>
+        <div id="msg">
+          <textarea
+            id="title"
+            class="q_post_title"
+            cols="30"
+            rows="1"
+            placeholder="題名を入力してください"
+          ></textarea>
+          <input
+            type="file"
+            name="example"
+            accept="image/jpeg, image/png"
+          /><br />
+          <textarea
+            id="situmon"
+            class="q_post_content"
+            rows="30"
+            placeholder="質問を入力してください"
+          ></textarea>
+          <button id="SToukou" class="toukou_b">投</button>
+        </div>
+      </div>
+    </div>
+    <form
+      action="file:///C:/Users/G020C1033/Documents/%E5%8D%92%E6%A5%AD%E5%88%B6%E4%BD%9C/%E5%88%B6%E4%BD%9C/situmon-home.html"
+      method="get"
+    >
+      <input type="search" name="search" placeholder="キーワードを入力" />
+      <input type="submit" name="submit" value="検索" />
+    </form>
+    <div id="posts"></div>
+    <ul id="dataList"></ul>
+    <h2><label id="toukou" for="popup" id="txt_label">投稿</label></h2>
+    <header>
+      <div class="detail_button">
+        <input type="checkbox" id="menu-btn-check" />
+        <label for="menu-btn-check" class="menu_button"><span></span></label>
+        <div class="menu-content">
+          <ul>
+            <li>
+              <a href="SNS.html">トップ</a>
+            </li>
+            <li>
+              <a href="keijiban.html">掲示板ページ</a>
+            </li>
+            <li>
+              <a href="point.html">ポイントページ</a>
+            </li>
+            <li>
+ret              <a href="meyasu.html">目安箱ページ</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        child,
+        get,
+        set,
+        update,
+        remove,
+        push,
+        onValue,
+      } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA3R_xD_ZKuausjMYIWsGuka3w9XlAxA-Y",
+        authDomain: "fir-v10-fa879.firebaseapp.com",
+        databaseURL: "https://fir-v10-fa879-default-rtdb.firebaseio.com",
+        projectId: "fir-v10-fa879",
+        storageBucket: "fir-v10-fa879.appspot.com",
+        messagingSenderId: "51654346876",
+        appId: "1:51654346876:web:23017fc57b01172f2361f9",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      const auth = getAuth(app);
+
+      const SToukou = document.getElementById("SToukou");
+      const overlay = document.getElementById("overlay");
+      const toukou = document.getElementById("toukou");
+      const list = document.getElementById("list");
+      const timeline = document.getElementById("timeline");
+
+      const user = auth.currentUser;
+      //let postsRef;
+
+      let title = document.getElementById("title");
+      let situmon = document.getElementById("situmon");
+      let posts_list = [];
+
+      var text = document.getElementById("text");
+
+      function H() {
+        overlay.style.display = "block";
+        title.value = "";
+        situmon.value = "";
+      }
+      function AddData() {
+        const user = auth.currentUser;
+        if (user) {
+          const uid = user.uid;
+          const postsRef = ref(db, "users/" + uid + "/posts");
+          const newPostRef = push(postsRef, {
+            uid: uid,
+            post: title.value,
+            situmon: situmon.value,
+          })
+            .then(() => {
+              posts_list.push({
+                title: title.value,
+                situmon: situmon.value,
+              });
+              updateView();
+              alert("Data Added Successfully");
+              let div = document.createElement("div");
+              overlay.style.display = "none";
+            })
+            .catch((error) => {
+              alert("Unsuccessful");
+              console.log(error);
+            });
+        }
+      }
+      function updateView() {
+        let postsHTML = '';
+        const user = auth.currentUser;
+        if (user) {
+          const uid = user.uid;
+          const postsRef = ref(db, "users/" + uid + "/posts");
+          onValue(postsRef, (snapshot) => {
+            const data = snapshot.val();
+            console.log(data);
+            // 投稿のDOMを消去
+            snapshot.forEach(child => {
+              postsHTML += `
+                <div>
+                <h3>${child.val().title}</h3>
+                <p>${child.val().situmon}</p>
+                </div>
+              `;
+            });
+
+          document.getElementById('posts').innerHTML = postsHTML;
+          },(error)=>console.log(error));
+        }
+      }
+      updateView();
+      SToukou.addEventListener("click", AddData);
+      toukou.addEventListener("click", H);
+    </script>
+  </body>
+</html>
