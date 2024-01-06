@@ -56,14 +56,13 @@ function AddData() {
 window.showPost = function (elem) {
   const key = elem.dataset.key; // 投稿のキーをデータ属性に
   sessionStorage.setItem("selectedKey", key);
-
   const post = elem.querySelector("h3").innerHTML;
-
   sessionStorage.setItem("selectedPost", post);
+  sessionStorage.setItem("selectednaiyou", post);
   window.location.href = "mypage.html";
-  document.getElementById("post-viewer").innerHTML = `
-    <h1>${post}</h1>
-  `;
+  //document.getElementById("post-viewer").innerHTML = `
+    //<h1>${post}</h1>
+  //`;
 };
 
 function updateView(){
@@ -82,8 +81,6 @@ function updateView(){
           const postsRef = ref(db, "users/" + uid + "/post");
           const postData = child.val();
           const formattedDate = formatTimestamp(postData.time);
-          console.log("タイムスタンプ:", postData.time);
-          console.log("フォーマットされた日時:", formattedDate);
           postsHTML += `
           <div onclick="showPost(this)" data-key="${child.key}">
             <h3>${child.val().post}</h3>

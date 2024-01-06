@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, remove } from "firebase/database";
+import { getDatabase, ref, update } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -11,43 +11,58 @@ const firebaseConfig = {
   messagingSenderId: "51654346876",
   appId: "1:51654346876:web:23017fc57b01172f2361f9",
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
+
 const selectedPost = sessionStorage.getItem("selectedPost");
-const selectednaiyou = sessionStorage.getItem("selectednaiyou");
-//console.log("hello:" + selectedPost);
+const naiyou = document.getElementById("naiyou");
+const now = new Date().toISOString();
 
 document.getElementById("post-viewer").innerHTML = `
  <h1>${selectedPost}</h1>
 `;
 
+document.addEventListener("DOMContentLoaded", function () {
+  // sessionStorage から selectednaiyou の値を取得
+  const selectedNaiyou = sessionStorage.getItem("selectednaiyou");
+
+  // 取得した値を textarea に表示
+  const textarea = document.getElementById("naiyou");
+  textarea.value = selectedNaiyou;
+});
+
+const selectednaiyou=sessionStorage.getItem("selectednaiyou")
+console.log("hello:" + selectednaiyou);
 const selectedKey = sessionStorage.getItem("selectedKey");
-console.log("post:" + selectedPost);
 console.log("キー:" + selectedKey);
 
-document.getElementById("del").addEventListener("click", handleDelete);
+document.getElementById("upd").addEventListener("click", handleupd);
 
-function handleDelete() {
+function handleupd() {
+  console.log("123456");
   const user = auth.currentUser;
   if (user) {
     const uid = user.uid;
     const postsRef = ref(db, "users/" + uid + "/post");
-
     console.log(selectedKey);
 
-    // 投稿データ削除
-    remove(ref(db, "users/" + uid + "/post/" + selectedKey))
+    // データを更新する
+    update(ref(db, "users/" + uid + "/post/" + selectedKey), {
+      post: naiyou.value,
+      time: now,
+    })
       .then(() => {
-        // データ削除が成功した場合の処理
-        alert("Data Deleted Successfully");
+        // データの更新が成功した場合の処理
+        alert("Data Updated Successfully");
         window.location.href = "table.html";
       })
       .catch((error) => {
         // エラーが発生した場合の処理
-        console.error("Data Deletion Unsuccessful", error);
+        console.error("Data Update Unsuccessful", error);
       });
   } else {
-    console.log("userがいません");
+    console.log("ユーザーがいません");
   }
 }

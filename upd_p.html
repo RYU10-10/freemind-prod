@@ -8,14 +8,19 @@
     <title>目安箱</title>
   </head>
   <body>
-    <button id="back" onclick="location.href = 'login.html'">TOP</button>
+    <button id="TOP" onclick="location.href = 'login.html'">TOP</button>
     <button id="back" onclick="location.href = 'post.html'">戻る</button>
 
-    <button id="del">削除</button>
-    <button id="upd" onclick="location.href = 'upd_p.html'">編集</button>
+    <button id="ha" onclick="location.href = 'upd_p.html'">編集</button>
+    <textarea id="naiyou" class="sb_student_text" cols="100" rows="30" placeholder="内容をお書きください"></textarea>
+    <button id="upd" class="sb _student_button" style = "width:100px;height:50px">
+      編集
+  </button>
+
     <div id="post-viewer" data-id="${child.key}"></div>
 
     <script type="module" src="src/main.js"></script>
     <script type="module" src="src/mypage.js"></script>
+    <script type="module" src="src/upd_p.js"></script>
   </body>
 </html>
