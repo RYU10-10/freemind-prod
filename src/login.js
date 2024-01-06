@@ -19,6 +19,14 @@ const loginButton = document.getElementById("login");
 function loginF() {
   signInWithPopup(auth, provider)
     .then((result) => {
+      const domain = result.user.email.split("@")[1];
+      // ドメインをチェック
+      if (domain !== "g.neec.ac.jp") {
+        // ドメインが一致しない場合はエラー
+        console.log("アカウントを変えてね");
+        throw new Error("ドメインが一致せん");
+      }
+      // ドメイン一致の場合はログインを許可
       location.href = "SNS.html";
     })
     .catch((error) => {

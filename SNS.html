@@ -1,82 +1,130 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-    <meta name="viewport" content="width=device-width,initial-scale = 1.0">
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/SNS.css">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale = 1.0" />
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/SNS.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>日本工学院専門学校専用SNS</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <button id="logout">ログアウト</button>
     <div id="userNameDisplay">
-        <p>こんにちは！！<span id="userName"></span></p>
-        <button id="logout">ログアウト</button>
+      <p>こんにちは！！<span id="userName"></span></p>
+      <button id="logout">ログアウト</button>
     </div>
 
-    <div style="border: #ff69b4 solid 1px; font-size: 120%; position: fixed;top:0;right:0; box-shadow: 0 5px 7px 0 #c0c0c0;">ポイント<br>${point}P</div>
-        <button onclick="location.href='situmon-home.html'" class = "q_button">
-            質問箱
-        </button>
+    <button id="po">ポイントボタン</button>
 
-        <button onclick="location.href='keijiban.html'" class = "bb_button">
-            掲示板
-        </button>
+    <div
+      id="point"
+      style="
+        border: #ff69b4 solid 1px;
+        font-size: 120%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        box-shadow: 0 5px 7px 0 #c0c0c0;
+      "
+    >
+    </div>
+    <button onclick="location.href='situmon-home.html'" class="q_button">
+      質問箱
+    </button>
 
-        <button onclick = "location.href = 'point.html'" class = "pt_button">
-            ポイント交換
-        </button>
+    <button onclick="location.href='keijiban.html'" class="bb_button">
+      掲示板
+    </button>
 
-        <button onclick = "location.href = 'post.html'" class = "sb_button">
-            目安箱
-        </button>
+    <button onclick="location.href = 'point.html'" class="pt_button">
+      ポイント交換
+    </button>
 
-        <script type="module">
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    <button onclick="location.href = 'post.html'" class="sb_button">
+      目安箱
+    </button>
 
-            import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
-            const message = document.getElementById("message");
-            const userName = document.getElementById("userName");
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
 
-            // Your web app's Firebase configuration
-            const firebaseConfig = {
-              apiKey: "AIzaSyA3R_xD_ZKuausjMYIWsGuka3w9XlAxA-Y",
-              authDomain: "fir-v10-fa879.firebaseapp.com",
-              databaseURL: "https://fir-v10-fa879-default-rtdb.firebaseio.com",
-              projectId: "fir-v10-fa879",
-              storageBucket: "fir-v10-fa879.appspot.com",
-              messagingSenderId: "51654346876",
-              appId: "1:51654346876:web:23017fc57b01172f2361f9"
-            };
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+      const message = document.getElementById("message");
+      const userName = document.getElementById("userName");
 
-            const app = initializeApp(firebaseConfig);
-            import{getDatabase,ref,child,get,set,update,remove} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
-            const auth = getAuth();
-            const provider = new GoogleAuthProvider()
-            const logoutButton = document.getElementById("logout")
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyA3R_xD_ZKuausjMYIWsGuka3w9XlAxA-Y",
+        authDomain: "fir-v10-fa879.firebaseapp.com",
+        databaseURL: "https://fir-v10-fa879-default-rtdb.firebaseio.com",
+        projectId: "fir-v10-fa879",
+        storageBucket: "fir-v10-fa879.appspot.com",
+        messagingSenderId: "51654346876",
+        appId: "1:51654346876:web:23017fc57b01172f2361f9",
+      };
+      import {
+        getDatabase,
+        ref,
+        child,
+        get,
+        set,
+        update,
+        remove,
+        push,
+        onValue,
+      } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 
-            onAuthStateChanged(auth, (user) => {
-               if(user) {
-                userName.innerHTML = user.displayName;
-                }
-            })
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      const auth = getAuth(app);
 
-            function logout(){
-                signOut(auth,provider).then((result) => {
-                location.href="login.html";
-               })
-            }
+      const provider = new GoogleAuthProvider();
+      const logoutButton = document.getElementById("logout");
+      const po = document.getElementById("po");
+
+      let pointHTML = "";
+      let count = 0
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userName.innerHTML = user.displayName;
+          updateView();
+        }
+      });
+
+      function logout() {
+        signOut(auth, provider).then((result) => {
+          location.href = "login.html";
+        });
+      }
+
         const user = auth.currentUser;
         if (user) {
           const uid = user.uid;
           const postsRef = ref(db, "users/" + uid + "/point");
-          const newPostRef = push(postsRef, {
-            uid: uid,
-            point:10
+          const newPostRef = set(postsRef, {
+            point: count,
           })
-            .then(() => {
+      }
+
+      function updadd() {
+        count = count+1
+        const user = auth.currentUser;
+        if (user) {
+          const uid = user.uid;
+          const postsRef = ref(db, "users/" + uid + "/point");
+          const newPostRef = update(postsRef, {
+            point: count,
+          })
+          .then.then(() => {
+              updateView();
               alert("Data Added Successfully");
             })
             .catch((error) => {
@@ -84,8 +132,35 @@
               console.log(error);
             });
         }
+      }
 
-            logoutButton.addEventListener("click",logout)
+      function updateView() {
+        const user = auth.currentUser;
+        if (user) {
+          const uid = user.uid;
+          const postsRef = ref(db, "users/" + uid + "/point");
+          onValue(
+            postsRef,
+            (snapshot) => {
+              pointHTML = "";
+              const data = snapshot.val();
+              console.log(data);
+              snapshot.forEach((child) => {
+                console.log(child.val())
+                pointHTML += `
+                <p>ポイント${child.val()}P</p>
+              `;
+              });
+              document.getElementById("point").innerHTML = pointHTML;
+              console.log(pointHTML)
+            },
+            (error) => console.log(error)
+          );
+        }
+      }
+
+      logoutButton.addEventListener("click", logout);
+      po.addEventListener("click", updadd);
     </script>
-</body>
+  </body>
 </html>

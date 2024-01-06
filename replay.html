@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/meyasu.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>目安箱</title>
+  </head>
+  <body>
+    <div id="post-viewer" data-id="${child.key}"></div>
+    <div id="post-viewer" data-id="${child.key}"></div>
+    <button id="TOP" onclick="location.href = 'login.html'">TOP</button>
+    <button id="back" onclick="location.href = 'situmon-home.html'">戻る</button>
+
+    <textarea id="naiyou" class="sb_student_text" cols="100" rows="30" placeholder="内容をお書きください"></textarea>
+    <button id="replaysend" class="sb _student_button" style = "width:100px;height:50px">
+      返信
+  </button>
+  <script type="module" src="src/firebaseConfig.js"></script>
+    <script type="module" src="src/sub.js"></script>
+    <script type="module" src="src/mypage_q.js"></script>
+    <script type="module" src="src/replay.js"></script>
+  </body>
+</html>

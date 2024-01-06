@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/meyasu.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>目安箱</title>
+  </head>
+  <body>
+    <button id="back" onclick="location.href = 'login.html'">TOP</button>
+    <button id="back" onclick="location.href = 'post.html'">戻る</button>
+
+    <button id="del">削除</button>
+    <button id="upd" onclick="location.href = 'upd_p.html'">編集</button>
+    <button id="reply" onclick="location.href = 'replay.html'">返信</button>
+    <div id="post-viewer" data-id="${child.key}"></div>
+
+    <script type="module" src="src/sub.js"></script>
+    <script type="module" src="src/mypage_q.js"></script>
+  </body>
+</html>
