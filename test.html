@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/situmon.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>質問箱ページ</title>
+  </head>
+  <body>
+    <input type="checkbox" id="popup" />
+    <div id="overlay">
+      <label for="popup" id="bg_gray"></label>
+      <div id="window">
+        <label for="popup" id="btn_cloth">
+          <span></span>
+        </label>
+        <div id="msg">
+          <textarea
+            id="title"
+            class="q_post_title"
+            cols="30"
+            rows="1"
+            placeholder="題名を入力してください"
+          ></textarea>
+
+          <input
+            type="file"
+            name="example"
+            accept="image/jpeg, image/png"
+          /><br />
+          <textarea
+            id="situmon"
+            class="q_post_content"
+            rows="30"
+            placeholder="質問を入力してください"
+          ></textarea>
+          <button id="SToukou" class="toukou_b">投</button>
+        </div>
+      </div>
+    </div>
+    <div id="posts"></div>
+    <h2><label id="toukou" for="popup" id="txt_label">投稿</label></h2>
+    <script type="module" src="src/firebaseConfig.js"></script>
+    <script type="module" src="src/firebase.js"></script>
+    <script type="module" src="src/sub.js"></script>
+  </body>
+</html>

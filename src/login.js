@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getDatabase, ref, push, set} from "firebase/database";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut,} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA3R_xD_ZKuausjMYIWsGuka3w9XlAxA-Y",
@@ -12,27 +13,41 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
 const loginButton = document.getElementById("login");
 
 function loginF() {
+  signOut(auth).then(() => {
+      console.log("logged out");
   signInWithPopup(auth, provider)
     .then((result) => {
-      const domain = result.user.email.split("@")[1];
+      //const domain = result.user.email.split("@")[1];
       // ドメインをチェック
-      if (domain !== "g.neec.ac.jp") {
+      //if (domain !== "g.neec.ac.jp") {
         // ドメインが一致しない場合はエラー
-        console.log("アカウントを変えてね");
-        throw new Error("ドメインが一致せん");
-      }
+        //alert("学校のアドレスでログインしてください");
+        //console.log("アカウントを変えてね");
+        //throw new Error("ドメインが一致せん");
+      //}
       // ドメイン一致の場合はログインを許可
+      const user = auth.currentUser;
+        if (user) {
+          const uid = user.uid;
+          const postsRef = ref(db, "users");
+          const newPostRef = push(postsRef, {
+            uid: uid,
+          })
+        }
+        console.log("認証しました")
       location.href = "SNS.html";
     })
-    .catch((error) => {
+  }).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-    });
+   });
 }
 
 loginButton.addEventListener("click", loginF);
